@@ -23,7 +23,8 @@ class SourceOut(BaseModel):
     filename: str
     page_number: int
     content: str
-    similarity: float
+    similarity: float | None
+    retrieval_method: str
     citation: str
 
 
@@ -45,4 +46,3 @@ class ProviderCheck(BaseModel):
     valid: bool
     model: str
     message: str
-

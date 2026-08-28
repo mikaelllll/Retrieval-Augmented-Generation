@@ -16,7 +16,8 @@ export interface Source {
   filename: string
   page_number: number
   content: string
-  similarity: number
+  similarity: number | null
+  retrieval_method: 'semantic' | 'overview'
   citation: string
 }
 
@@ -28,4 +29,3 @@ export interface Answer {
   retrieval_ms: number
   generation_ms: number
 }
-

@@ -47,10 +47,9 @@ export function Chat({ documents, verified, asking, onAsk }: Props) {
           <div className="answer__header"><Bot size={21} /><strong>{answer.status === 'answered' ? 'Grounded answer' : 'Insufficient evidence'}</strong><span>{answer.model}</span></div>
           <div className="answer__text"><ReactMarkdown>{answer.answer}</ReactMarkdown></div>
           <div className="metrics"><span>Retrieval <strong>{answer.retrieval_ms} ms</strong></span><span>Generation <strong>{answer.generation_ms} ms</strong></span><span>Sources <strong>{answer.sources.length}</strong></span></div>
-          {answer.sources.length > 0 && <div className="sources"><h3>Retrieved evidence</h3>{answer.sources.map((source) => <details key={`${source.document_id}-${source.citation}`}><summary><strong>{source.citation}</strong> {source.filename} · page {source.page_number}<span>{Math.round(source.similarity * 100)}% match</span></summary><p>{source.content}</p></details>)}</div>}
+          {answer.sources.length > 0 && <div className="sources"><h3>Retrieved evidence</h3>{answer.sources.map((source) => <details key={`${source.document_id}-${source.citation}`}><summary><strong>{source.citation}</strong> {source.filename} · page {source.page_number}<span>{source.retrieval_method === 'overview' ? 'Overview passage' : `${Math.round((source.similarity ?? 0) * 100)}% match`}</span></summary><p>{source.content}</p></details>)}</div>}
         </div>
       )}
     </section>
   )
 }
-
