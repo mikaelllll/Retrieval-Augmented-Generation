@@ -16,7 +16,6 @@ depends_on: str | Sequence[str] | None = None
 def upgrade() -> None:
     op.execute("CREATE EXTENSION IF NOT EXISTS vector")
     status = sa.Enum("queued", "processing", "ready", "failed", name="documentstatus")
-    status.create(op.get_bind(), checkfirst=True)
     op.create_table(
         "documents",
         sa.Column("id", postgresql.UUID(as_uuid=True), nullable=False),
@@ -58,4 +57,3 @@ def downgrade() -> None:
     op.drop_table("chunks")
     op.drop_table("documents")
     sa.Enum(name="documentstatus").drop(op.get_bind(), checkfirst=True)
-
