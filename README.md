@@ -108,7 +108,7 @@ Stop the environment with `docker compose down`. Add `-v` only when you intentio
 
 ## Quality controls
 
-GitHub Actions validates backend lint/tests, the production frontend build, Compose configuration, and container builds on pushes and pull requests. No real performance, accuracy, or coverage number is claimed until it is measured by a reproducible benchmark.
+GitHub Actions validates backend lint/tests, frontend lint/tests, the production frontend build, Compose configuration, and container builds on pushes and pull requests. No real performance, accuracy, or coverage number is claimed until it is measured by a reproducible benchmark.
 
 ## License
 
