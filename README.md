@@ -4,6 +4,36 @@ A production-minded Retrieval-Augmented Generation application that makes every 
 
 The project is designed as a backend-focused portfolio system without treating the frontend as an afterthought. It runs as a complete multi-container environment in GitHub Codespaces.
 
+## What this project does
+
+RAG combines information retrieval with a Large Language Model (LLM). Instead of asking Gemini to answer only from its general training knowledge, this application first searches the documents uploaded by the user and then gives the model the relevant evidence needed to answer.
+
+The complete flow is:
+
+1. The user uploads a PDF.
+2. The backend validates the file, extracts its text, and divides it into overlapping passages.
+3. A local embedding model converts each passage into a numerical vector.
+4. PostgreSQL with pgvector stores those vectors and searches them when a question is submitted.
+5. The backend selects relevant passages. Generic document-overview questions use representative passages, while specific factual questions use semantic similarity and an evidence threshold.
+6. Gemini receives the question and retrieved evidence—not the complete document—and produces a grounded answer with citations.
+7. The frontend displays the answer, cited passages, retrieval information, source pages, and retrieval/generation latency.
+
+## Objective and portfolio value
+
+The objective is to demonstrate the complete engineering pipeline behind evidence-grounded AI applications, rather than only placing a chat interface in front of an LLM API. It shows how document ingestion, asynchronous processing, local embeddings, vector search, access control, prompt construction, generation, citations, and user feedback work together as one system.
+
+The project demonstrates:
+
+- Retrieval-Augmented Generation architecture and semantic search
+- Free, local document embeddings with `all-MiniLM-L6-v2`
+- Grounded Gemini answers constrained to retrieved evidence
+- Source citations, page references, retrieval scores, and latency visibility
+- Asynchronous PDF processing with Redis and Celery workers
+- FastAPI, PostgreSQL, pgvector, React, TypeScript, and Docker Compose
+- Automated GitHub Codespaces setup, testing, continuous integration, security controls, and documented operational tradeoffs
+
+This is not intended to be a general-purpose chatbot. It is an inspectable reference implementation showing how an LLM can answer questions about user-provided documents while making the origin of its answer visible.
+
 ## Run in GitHub Codespaces
 
 1. Open this repository on GitHub.
@@ -46,7 +76,7 @@ flowchart TD
 
 - **Ingestion:** FastAPI validates and stores PDFs, then enqueues processing.
 - **Processing:** Celery extracts text, chunks pages with overlap, and generates embeddings locally with a CPU-focused ONNX runtime.
-- **Retrieval:** PostgreSQL/pgvector ranks chunks by cosine similarity and applies an evidence threshold.
+- **Retrieval:** PostgreSQL/pgvector ranks chunks by cosine similarity and applies an evidence threshold; overview requests use representative document passages.
 - **Generation:** only retrieved evidence, citation labels, and the question are sent to Gemini.
 - **Presentation:** React shows operational states, answers, sources, scores, and timing.
 
