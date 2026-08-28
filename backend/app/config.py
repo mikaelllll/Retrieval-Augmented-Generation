@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     max_upload_mb: int = Field(default=15, ge=1, le=100)
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
     embedding_dimensions: int = 384
-    gemini_model: str = "gemini-2.5-flash-lite"
+    gemini_model: str = "gemini-3.1-flash-lite"
     retrieval_limit: int = Field(default=6, ge=1, le=20)
     similarity_threshold: float = Field(default=0.28, ge=0, le=1)
 
@@ -26,4 +26,3 @@ def get_settings() -> Settings:
 
 
 settings = get_settings()
-

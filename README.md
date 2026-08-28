@@ -29,6 +29,8 @@ The application intentionally does not open a browser automatically. Codespaces 
 
 Do not submit confidential documents or secrets to a public demo. Free-tier Gemini data handling is governed by Google's current terms.
 
+The default generation model is the stable free-tier `gemini-3.1-flash-lite`. The Codespaces setup automatically migrates the earlier demo default when resuming an existing environment.
+
 ## Architecture at a glance
 
 ```mermaid

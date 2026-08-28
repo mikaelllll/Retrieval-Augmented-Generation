@@ -1,4 +1,5 @@
 import json
+import re
 from time import perf_counter
 
 from google import genai
@@ -47,7 +48,25 @@ def provider_error(exc: Exception) -> str:
     raw = str(exc)
     try:
         parsed = json.loads(raw[raw.index("{") :])
-        return parsed.get("error", {}).get("message", "Gemini request failed")
+        message = parsed.get("error", {}).get("message", "Gemini request failed")
+        return re.sub(r"AIza[0-9A-Za-z_-]{20,}", "[REDACTED]", message)[:300]
     except (ValueError, json.JSONDecodeError):
-        return "Gemini rejected the request. Verify the key and free-tier quota."
-
+        normalized = raw.casefold()
+        if "reported as leaked" in normalized or "api key was blocked" in normalized:
+            return "Google has blocked this key as exposed. Create a new key in Google AI Studio."
+        if "api_key_invalid" in normalized or "api key not valid" in normalized:
+            return "Google rejected this API key. Copy a valid Gemini key from Google AI Studio."
+        if "resource_exhausted" in normalized or "429" in normalized:
+            return (
+                "The Gemini free-tier quota is exhausted. "
+                "Wait for it to reset or use another project."
+            )
+        if "permission_denied" in normalized or "403" in normalized:
+            return (
+                "This key cannot call the Gemini API. "
+                "Check its API restrictions and project access."
+            )
+        if "not_found" in normalized or "404" in normalized:
+            return "The configured Gemini model is unavailable. Update and restart the application."
+        safe = re.sub(r"AIza[0-9A-Za-z_-]{20,}", "[REDACTED]", raw).splitlines()[0]
+        return safe[:300] or "Gemini rejected the request."
