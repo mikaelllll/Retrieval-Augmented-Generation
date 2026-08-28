@@ -1,4 +1,4 @@
-import { Eye, EyeOff, KeyRound, ShieldCheck } from 'lucide-react'
+import { ExternalLink, Eye, EyeOff, KeyRound, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
 import { api } from '../api'
 import { Tooltip } from './Tooltip'
@@ -49,7 +49,18 @@ export function KeyPanel({ apiKey, setApiKey, verified, setVerified }: Props) {
         <ShieldCheck size={16} />
         <span>{message || 'Session-only: refreshing or closing this page removes the key.'}</span>
       </div>
+      <details className="key-guide">
+        <summary>How to get a free Gemini API key</summary>
+        <ol>
+          <li>
+            Open <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer">Google AI Studio <ExternalLink size={13} /></a> and sign in with a Google account.
+          </li>
+          <li>Select <strong>Create API key</strong> and choose or create a Google project.</li>
+          <li>Copy the generated key, return to this page, and paste it into the field above.</li>
+          <li>Select <strong>Verify key</strong>. The key stays only in this page's memory for the current session.</li>
+        </ol>
+        <p>Free-tier limits can change. Do not use confidential documents with a demonstration key.</p>
+      </details>
     </section>
   )
 }
-

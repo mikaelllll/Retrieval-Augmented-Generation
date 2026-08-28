@@ -11,10 +11,12 @@ The frontend uses React 19, strict TypeScript, Vite, TanStack Query, and a produ
 - Answers expose retrieval latency, generation latency, source count, similarity, page, and passage text.
 - Empty evidence produces an explicit refusal instead of a fabricated answer.
 - Tooltips explain the engineering meaning of each workflow.
+- The key panel includes an expandable Google AI Studio setup tutorial for first-time visitors.
+
+Nginx routes `/docs` and `/openapi.json` directly to FastAPI, so the header's API link opens the live Swagger interface without requiring visitors to construct the separate Codespaces port-8000 URL.
 
 ## Credential handling
 
 The Gemini key exists only in React component memory. It is not placed in local storage, session storage, cookies, URLs, analytics, or state-management caches. Refreshing the page removes it. Browser developer tools can still inspect an in-flight request, which is expected for a bring-your-own-key local demonstration.
 
 The anonymous workspace UUID is persisted in local storage because it is an identifier, not a credential. A production deployment would replace it with authenticated server-issued identity.
-
