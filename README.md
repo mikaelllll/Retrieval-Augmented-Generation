@@ -1,0 +1,83 @@
+# RAG Explorer
+
+A production-minded Retrieval-Augmented Generation application that makes every stage of a grounded answer visible: PDF ingestion, background processing, local embeddings, vector retrieval, evidence scoring, Gemini generation, and citations.
+
+The project is designed as a backend-focused portfolio system without treating the frontend as an afterthought. It runs as a complete multi-container environment in GitHub Codespaces.
+
+## Run in GitHub Codespaces
+
+1. Open this repository on GitHub.
+2. Select **Code → Codespaces → Create codespace on main**.
+3. If prompted, select **Yes, I trust the authors** so Codespaces can open a terminal and run the setup.
+4. Wait for `.devcontainer/setup.sh` to build and start all containers. The first build downloads Python, Node, and machine-learning dependencies and can take several minutes.
+5. When the terminal is ready, print the frontend URL yourself:
+
+   ```bash
+   bash .devcontainer/print-url.sh
+   ```
+
+6. Open the printed URL. If it does not open, go to the **Ports** tab, locate port **3000**, and select **Open in Browser**.
+
+The application intentionally does not open a browser automatically. Codespaces may execute setup before the user has accepted repository trust or before an interactive terminal is visible; the command above puts the timing under the user's control.
+
+## Try the application
+
+1. Create a free Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey).
+2. Paste it into **Connect Gemini** and verify it. The key remains only in the current page's memory and is never stored in PostgreSQL, Redis, local storage, source code, or logs.
+3. Upload a text-based PDF and watch it move through queued, processing, and ready states.
+4. Ask a question and inspect the retrieved passages, similarity scores, page citations, and latency breakdown.
+
+Do not submit confidential documents or secrets to a public demo. Free-tier Gemini data handling is governed by Google's current terms.
+
+## Architecture at a glance
+
+```mermaid
+flowchart TD
+    UI["React UI"] --> API["FastAPI"]
+    API --> PG["PostgreSQL + pgvector"]
+    API --> R["Redis"]
+    R --> W["Celery worker"]
+    W --> E["Local MiniLM / ONNX embeddings"]
+    W --> PG
+    API --> G["Gemini API"]
+```
+
+- **Ingestion:** FastAPI validates and stores PDFs, then enqueues processing.
+- **Processing:** Celery extracts text, chunks pages with overlap, and generates embeddings locally with a CPU-focused ONNX runtime.
+- **Retrieval:** PostgreSQL/pgvector ranks chunks by cosine similarity and applies an evidence threshold.
+- **Generation:** only retrieved evidence, citation labels, and the question are sent to Gemini.
+- **Presentation:** React shows operational states, answers, sources, scores, and timing.
+
+## Documentation
+
+| Guide | Contents |
+|---|---|
+| [Architecture](docs/architecture.md) | Components, request flows, design decisions, and scaling |
+| [Backend](docs/backend.md) | FastAPI, data model, worker, retrieval, and API endpoints |
+| [Frontend](docs/frontend.md) | React structure, security decisions, states, and UX |
+| [RAG pipeline](docs/rag-pipeline.md) | Extraction, chunking, embeddings, search, prompts, and citations |
+| [Operations](docs/operations.md) | Docker, Codespaces, observability, troubleshooting, and production gaps |
+| [Security](docs/security.md) | Key handling, isolation, upload validation, and threat model |
+
+## Local development
+
+Requirements: Docker Engine with Docker Compose.
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+- Frontend: `http://localhost:3000`
+- OpenAPI/Swagger: `http://localhost:8000/docs`
+- Readiness: `http://localhost:8000/health/ready`
+
+Stop the environment with `docker compose down`. Add `-v` only when you intentionally want to erase databases, uploads, and cached models.
+
+## Quality controls
+
+GitHub Actions validates backend lint/tests, the production frontend build, Compose configuration, and container builds on pushes and pull requests. No real performance, accuracy, or coverage number is claimed until it is measured by a reproducible benchmark.
+
+## License
+
+Released under the [MIT License](LICENSE).
