@@ -38,3 +38,7 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "ASYNC", "S"]
 ignore = ["S101"]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+exclude = ["migrations*", "tests*"]
