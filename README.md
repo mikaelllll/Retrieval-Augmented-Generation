@@ -80,6 +80,22 @@ flowchart TD
 - **Generation:** only retrieved evidence, citation labels, and the question are sent to Gemini.
 - **Presentation:** React shows operational states, answers, sources, scores, and timing.
 
+## Key engineering decisions
+
+- **Generate embeddings locally:** document passages are embedded inside the worker so raw document text is not sent to an embedding provider.
+- **Use PostgreSQL with pgvector:** relational document metadata and vector retrieval share one transactional data store, keeping the demonstration easier to operate and inspect.
+- **Send only retrieved evidence to Gemini:** prompts contain the question and selected passages rather than the complete PDF, reducing disclosure and focusing generation.
+- **Expose retrieval evidence:** citations, pages, similarity scores, thresholds, and latency are shown so answers can be evaluated instead of presented as unexplained model output.
+- **Process ingestion asynchronously:** Celery and Redis keep PDF extraction and embedding work outside request-response latency.
+
+## Trade-offs
+
+- A compact local embedding model is free and CPU-friendly, but less capable than larger hosted embedding models on specialized domains.
+- Fixed chunking with overlap is predictable, though document-aware or hierarchical chunking could improve retrieval for complex layouts.
+- pgvector is operationally simple for this scale; a dedicated vector database may offer more indexing and distributed-scaling options at much larger volumes.
+- Evidence thresholds reduce unsupported answers but can reject relevant passages when wording differs significantly.
+- Gemini generation requires a user-provided external API key and remains subject to provider availability, quotas, and data terms.
+
 ## Documentation
 
 | Guide | Contents |
