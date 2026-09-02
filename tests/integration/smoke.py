@@ -24,14 +24,14 @@ def call(
         with urlopen(req, timeout=20) as response:
             status = response.status
             raw = response.read()
-            response_headers = dict(response.headers.items())
+            response_headers = {key.lower(): value for key, value in response.headers.items()}
     except HTTPError as exc:
         status = exc.code
         raw = exc.read()
-        response_headers = dict(exc.headers.items())
+        response_headers = {key.lower(): value for key, value in exc.headers.items()}
 
     assert status == expected, f"{method} {url}: expected {expected}, got {status}: {raw!r}"
-    content_type = response_headers.get("Content-Type", "")
+    content_type = response_headers.get("content-type", "")
     parsed = json.loads(raw) if raw and "json" in content_type else raw.decode()
     return parsed, response_headers
 
