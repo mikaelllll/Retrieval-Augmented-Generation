@@ -35,7 +35,7 @@ export default function App() {
       <header className="topbar">
         <a className="brand" href="#top"><span className="brand__mark"><Network size={22} /></span><span>RAG<span>Explorer</span></span></a>
         <nav><a href="#workspace">Workspace</a><a href="#architecture">Architecture</a><a href="/docs" target="_blank" rel="noreferrer">API</a></nav>
-        <a className="github-link" href="https://github.com/mikaelllll/Retrieval-Augmented-Generation-example" target="_blank" rel="noreferrer"><Github size={18} /> GitHub</a>
+        <a className="github-link" href="https://github.com/mikaelllll/Retrieval-Augmented-Generation" target="_blank" rel="noreferrer"><Github size={18} /> GitHub</a>
       </header>
 
       <main id="top">
