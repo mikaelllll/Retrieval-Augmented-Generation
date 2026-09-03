@@ -4,6 +4,10 @@ A production-minded Retrieval-Augmented Generation application that makes every 
 
 The project is designed as a backend-focused portfolio system without treating the frontend as an afterthought. It runs as a complete multi-container environment in GitHub Codespaces.
 
+## Application preview
+
+[![RAG Explorer retrieval-augmented generation interface](docs/images/application-preview.webp)](docs/images/application-preview.webp)
+
 ## What this project does
 
 RAG combines information retrieval with a Large Language Model (LLM). Instead of asking Gemini to answer only from its general training knowledge, this application first searches the documents uploaded by the user and then gives the model the relevant evidence needed to answer.
