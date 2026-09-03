@@ -6,7 +6,7 @@
   },
   "forwardPorts": [3000, 8000],
   "portsAttributes": {
-    "3000": { "label": "RAG Explorer frontend", "onAutoForward": "notify", "visibility": "public" },
+    "3000": { "label": "RAG Explorer frontend", "onAutoForward": "notify", "visibility": "private" },
     "8000": { "label": "FastAPI / Swagger", "onAutoForward": "silent", "visibility": "private" }
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
